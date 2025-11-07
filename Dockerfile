@@ -9,12 +9,13 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache rewrite module
 RUN a2enmod rewrite
 
+# Copy project files
+COPY . /var/www/html
+
 # Set working directory
 WORKDIR /var/www/html
-COPY . /var/www/html
-WORKDIR /var/www/html/public
 
-# Tell Apache to serve the Laravel public directory
+# Tell Apache to use the Laravel public directory as root
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Copy project files into container
