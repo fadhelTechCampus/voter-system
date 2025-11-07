@@ -11,6 +11,11 @@ RUN a2enmod rewrite
 
 # Set working directory
 WORKDIR /var/www/html
+COPY . /var/www/html
+WORKDIR /var/www/html/public
+
+# Tell Apache to serve the Laravel public directory
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Copy project files into container
 COPY . .
@@ -20,14 +25,13 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Install dependencies (non-interactive mode)
 RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader || true
-
-# Set file permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
 # Set file permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 777 /var/www/html/storage
 RUN chmod -R 777 /var/www/html/bootstrap/cache
+
+# Tell Apache to serve the Laravel public directory
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Expose port 80 for Render
 EXPOSE 80
