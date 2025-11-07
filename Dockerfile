@@ -24,6 +24,11 @@ RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoload
 # Set file permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Set file permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 777 /var/www/html/storage
+RUN chmod -R 777 /var/www/html/bootstrap/cache
+
 # Expose port 80 for Render
 EXPOSE 80
 
